@@ -44,7 +44,7 @@ class PostAdmin(admin.ModelAdmin):
     list_editable = (
         'is_published',
         'category'
-    )    
+    )
     search_fields = ('title', 'text',)
     list_filter = ('category', 'is_published',)
 
