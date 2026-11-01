@@ -7,7 +7,7 @@ MAX_POSTS = 5
 
 
 def get_published_posts():
-    """Возвращает отфильтрованный QuerySet"""
+    """Возвращает отфильтрованный QuerySet."""
     return Post.objects.filter(
         is_published=True,
         category__is_published=True,
