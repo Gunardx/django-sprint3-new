@@ -1,9 +1,11 @@
 from django.contrib import admin
+
 from .models import Post, Category, Location
 
 admin.site.empty_value_display = 'Не задано'
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -19,6 +21,7 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -30,6 +33,7 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -47,8 +51,3 @@ class PostAdmin(admin.ModelAdmin):
     )
     search_fields = ('title', 'text',)
     list_filter = ('category', 'is_published',)
-
-
-admin.site.register(Post)
-admin.site.register(Category)
-admin.site.register(Location)

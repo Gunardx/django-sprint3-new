@@ -30,7 +30,6 @@ class Post(BaseModel):
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор публикации',
-        related_name='user_posts'
     )
     location = models.ForeignKey(
         'Location',
@@ -38,13 +37,11 @@ class Post(BaseModel):
         null=True,
         blank=True,
         verbose_name='Местоположение',
-        related_name='location_posts'
     )
     category = models.ForeignKey(
         'Category',
         on_delete=models.SET_NULL,
         null=True,
-        related_name='category_posts',
         verbose_name='Категория'
     )
 
@@ -52,6 +49,7 @@ class Post(BaseModel):
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
         ordering = ('-pub_date',)
+        default_related_name = 'posts'
 
     def __str__(self):
         return self.title[:MAX_STR_LEN]

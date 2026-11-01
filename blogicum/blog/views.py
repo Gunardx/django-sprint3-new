@@ -1,8 +1,18 @@
 from django.shortcuts import get_object_or_404, render
-from .models import Post, Category
 from django.utils import timezone
 
+from .models import Post, Category
+
 MAX_POSTS = 5
+
+
+def get_published_posts():
+    """Возвращает отфильтрованный QuerySet"""
+    return Post.objects.filter(
+        is_published=True,
+        category__is_published=True,
+        pub_date__lte=timezone.now()
+    )
 
 
 def index(request):
@@ -14,10 +24,8 @@ def index(request):
     а дата публикации не находится в будущем времени.
     """
     template_name = 'blog/index.html'
-    post_list = Post.objects.filter(
-        is_published=True,
-        category__is_published=True,
-        pub_date__lte=timezone.now()
+    post_list = get_published_posts().select_related(
+        'author', 'category', 'location',
     )[:MAX_POSTS]
 
     context = {'post_list': post_list, }
@@ -35,11 +43,8 @@ def post_detail(request, id):
     """
     template_name = 'blog/detail.html'
     post = get_object_or_404(
-        Post,
+        get_published_posts(),
         id=id,
-        is_published=True,
-        category__is_published=True,
-        pub_date__lte=timezone.now(),
     )
     context = {'post': post}
     return render(request, template_name, context)
@@ -60,9 +65,8 @@ def category_posts(request, category_slug):
         slug=category_slug,
         is_published=True,
     )
-    post_list = Post.objects.filter(
+    post_list = category.posts.filter(
         is_published=True,
-        category=category,
         pub_date__lte=timezone.now(),
     )
     context = {
